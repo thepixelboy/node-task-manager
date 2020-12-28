@@ -24,6 +24,17 @@ const User = mongoose.model('User', {
       }
     },
   },
+  password: {
+    type: String,
+    required: true,
+    trim: true,
+    minlength: 7,
+    validate(value) {
+      if (value.toLowerCase().includes('password')) {
+        throw new Error(`You can't use the word 'password' as a password.`);
+      }
+    },
+  },
   age: {
     type: Number,
     default: 0,
@@ -38,32 +49,39 @@ const User = mongoose.model('User', {
 const Task = mongoose.model('Task', {
   description: {
     type: String,
+    required: true,
+    trim: true,
   },
   completed: {
     type: Boolean,
+    default: false,
   },
 });
 
-const me = new User({ name: 'Jane Doe', email: 'jane.doed@fbi.GOV   ' });
-
-me.save()
-  .then(() => {
-    console.log(me);
-  })
-  .catch((err) => {
-    console.log('Error: ', err);
-  });
-
-// const task = new Task({
-//   description: 'Create a new instance of the model',
-//   completed: false,
+// const me = new User({
+//   name: 'Han Solo',
+//   email: 'solo.han@milleniumfalcom.com',
+//   password: 'loremIpsum  ',
 // });
 
-// task
-//   .save()
+// me.save()
 //   .then(() => {
-//     console.log(task);
+//     console.log(me);
 //   })
 //   .catch((err) => {
 //     console.log('Error: ', err);
 //   });
+
+const task = new Task({
+  description: 'Test your work with and without errors',
+  completed: true,
+});
+
+task
+  .save()
+  .then(() => {
+    console.log(task);
+  })
+  .catch((err) => {
+    console.log('Error: ', err);
+  });
