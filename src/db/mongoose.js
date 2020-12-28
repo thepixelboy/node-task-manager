@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
 
 mongoose.connect('mongodb://pop-os.local:27017/task-manager-api', {
   useNewUrlParser: true,
@@ -9,9 +10,28 @@ mongoose.connect('mongodb://pop-os.local:27017/task-manager-api', {
 const User = mongoose.model('User', {
   name: {
     type: String,
+    required: true,
+    trim: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    trim: true,
+    lowercase: true,
+    validate(value) {
+      if (!validator.isEmail(value)) {
+        throw new Error('Email is invalid');
+      }
+    },
   },
   age: {
     type: Number,
+    default: 0,
+    validate(value) {
+      if (value < 0) {
+        throw new Error('Age must be a positive number');
+      }
+    },
   },
 });
 
@@ -24,29 +44,26 @@ const Task = mongoose.model('Task', {
   },
 });
 
-// const me = new User({
-//   name: 'John Doe',
-//   age: 'Mike',
-// });
+const me = new User({ name: 'Jane Doe', email: 'jane.doed@fbi.GOV   ' });
 
-// me.save()
-//   .then(() => {
-//     console.log(me);
-//   })
-//   .catch((err) => {
-//     console.log('Error: ', err);
-//   });
-
-const task = new Task({
-  description: 'Create a new instance of the model',
-  completed: false,
-});
-
-task
-  .save()
+me.save()
   .then(() => {
-    console.log(task);
+    console.log(me);
   })
   .catch((err) => {
     console.log('Error: ', err);
   });
+
+// const task = new Task({
+//   description: 'Create a new instance of the model',
+//   completed: false,
+// });
+
+// task
+//   .save()
+//   .then(() => {
+//     console.log(task);
+//   })
+//   .catch((err) => {
+//     console.log('Error: ', err);
+//   });
