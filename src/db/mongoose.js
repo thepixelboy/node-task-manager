@@ -15,14 +15,37 @@ const User = mongoose.model('User', {
   },
 });
 
-const me = new User({
-  name: 'John Doe',
-  age: 'Mike',
+const Task = mongoose.model('Task', {
+  description: {
+    type: String,
+  },
+  completed: {
+    type: Boolean,
+  },
 });
 
-me.save()
+// const me = new User({
+//   name: 'John Doe',
+//   age: 'Mike',
+// });
+
+// me.save()
+//   .then(() => {
+//     console.log(me);
+//   })
+//   .catch((err) => {
+//     console.log('Error: ', err);
+//   });
+
+const task = new Task({
+  description: 'Create a new instance of the model',
+  completed: false,
+});
+
+task
+  .save()
   .then(() => {
-    console.log(me);
+    console.log(task);
   })
   .catch((err) => {
     console.log('Error: ', err);
