@@ -35,12 +35,37 @@ app.get('/users/:id', async (req, res) => {
     const user = await User.findById(_id);
 
     if (!user) {
-      return res.status(404).send('User not found');
+      return res.status(404).send({ error: 'User not found' });
     }
 
     res.send(user);
   } catch (err) {
     res.status(500).send();
+  }
+});
+
+app.patch('/users/:id', async (req, res) => {
+  const updates = Object.keys(req.body);
+  const allowed = ['name', 'email', 'password', 'age'];
+  const isValidOperation = updates.every((update) => allowed.includes(update));
+
+  if (!isValidOperation) {
+    return res.status(400).send({ error: 'Invalid update' });
+  }
+
+  try {
+    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!user) {
+      return res.status(404).send({ error: 'User not found' });
+    }
+
+    res.send(user);
+  } catch (err) {
+    res.status(400).send(err);
   }
 });
 
