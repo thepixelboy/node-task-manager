@@ -17,23 +17,27 @@ router.post('/tasks', auth, async (req, res) => {
   }
 });
 
-router.get('/tasks', async (req, res) => {
+router.get('/tasks', auth, async (req, res) => {
   try {
-    const tasks = await Task.find({});
+    // This code also works as an alternative:
+    // await req.user.populate('tasks').execPopulate();
+    // res.send(req.user.tasks);
+    // In this case, I'll go with the shorter code
+    const tasks = await Task.find({ owner: req.user._id });
     res.send(tasks);
   } catch (err) {
     res.status(500).send(err);
   }
 });
 
-router.get('/tasks/:id', async (req, res) => {
+router.get('/tasks/:id', auth, async (req, res) => {
   const _id = req.params.id;
 
   try {
-    const task = await Task.findById(_id);
+    const task = await Task.findOne({ _id, owner: req.user._id });
 
     if (!task) {
-      return res.status(404).send('Task not found');
+      return res.status(404).send({ error: 'Task not found' });
     }
 
     res.send(task);
@@ -42,7 +46,7 @@ router.get('/tasks/:id', async (req, res) => {
   }
 });
 
-router.patch('/tasks/:id', async (req, res) => {
+router.patch('/tasks/:id', auth, async (req, res) => {
   const updates = Object.keys(req.body);
   const allowed = ['description', 'completed'];
   const isValidOperation = updates.every((update) => allowed.includes(update));
@@ -52,14 +56,17 @@ router.patch('/tasks/:id', async (req, res) => {
   }
 
   try {
-    const task = await Task.findById(req.params.id);
-
-    updates.forEach((update) => (task[update] = req.body[update]));
-    await task.save();
+    const task = await Task.findOne({
+      _id: req.params.id,
+      owner: req.user._id,
+    });
 
     if (!task) {
       return res.status(404).send({ error: 'Task not found' });
     }
+
+    updates.forEach((update) => (task[update] = req.body[update]));
+    await task.save();
 
     res.send(task);
   } catch (err) {
@@ -67,9 +74,12 @@ router.patch('/tasks/:id', async (req, res) => {
   }
 });
 
-router.delete('/tasks/:id', async (req, res) => {
+router.delete('/tasks/:id', auth, async (req, res) => {
   try {
-    const task = await Task.findByIdAndDelete(req.params.id);
+    const task = await Task.findOneAndDelete({
+      _id: req.params.id,
+      owner: req.user._id,
+    });
 
     if (!task) {
       return res.status(404).send({ error: 'Task not found' });
