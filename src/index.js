@@ -33,16 +33,16 @@ app.listen(port, () => {
 });
 
 // Testing bcryptjs
-const jwt = require('jsonwebtoken');
+// const jwt = require('jsonwebtoken');
 
-const myFunction = async () => {
-  const token = jwt.sign({ _id: 'abc123' }, jwtSecret, {
-    expiresIn: '7 days',
-  });
-  console.log(token);
+// const myFunction = async () => {
+//   const token = jwt.sign({ _id: 'abc123' }, jwtSecret, {
+//     expiresIn: '7 days',
+//   });
+//   console.log(token);
 
-  const data = jwt.verify(token, jwtSecret);
-  console.log(data);
-};
+//   const data = jwt.verify(token, jwtSecret);
+//   console.log(data);
+// };
 
-myFunction();
+// myFunction();
