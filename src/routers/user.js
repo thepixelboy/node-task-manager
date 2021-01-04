@@ -86,7 +86,7 @@ const upload = multer({
   dest: 'avatars',
 });
 
-router.get('/users/me/avatar'),
+router.post('/users/me/avatar'),
   upload.single('avatar'),
   (req, res) => {
     res.send();
