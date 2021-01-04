@@ -25,9 +25,16 @@ const upload = multer({
     cb(undefined, true);
   },
 });
-app.post('/upload', upload.single('upload'), (req, res) => {
-  res.send();
-});
+app.post(
+  '/upload',
+  upload.single('upload'),
+  (req, res) => {
+    res.send();
+  },
+  (err, req, res, next) => {
+    res.status(400).send({ error: err.message });
+  }
+);
 
 app.use(express.json());
 app.use(userRouter);
