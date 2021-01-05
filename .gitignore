@@ -116,3 +116,4 @@ dist
 .yarn/install-state.gz
 .pnp.*
 config.env
+config.test.env
