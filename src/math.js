@@ -8,4 +8,21 @@ const fahrenheitToCelsius = (temp) => {
   return (temp - 32) / 1.8;
 };
 
-module.exports = { calculateTip, celsiusToFahrenheit, fahrenheitToCelsius };
+const add = (a, b) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (a < 0 || b < 0) {
+        return reject('Numbers must be non-negative');
+      }
+
+      resolve(a + b);
+    }, 2000);
+  });
+};
+
+module.exports = {
+  calculateTip,
+  celsiusToFahrenheit,
+  fahrenheitToCelsius,
+  add,
+};
