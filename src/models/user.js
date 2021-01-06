@@ -2,10 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv');
 const Task = require('./task');
-
-dotenv.config({ path: './config.env' });
 
 const jwtSecret = process.env.JWT_SECRET_KEY;
 
