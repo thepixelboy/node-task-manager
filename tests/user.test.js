@@ -91,6 +91,7 @@ test('Should delete account for user', async () => {
     .send()
     .expect(200);
 
+  // Assert that the user was actually deleted
   const user = await User.findById(userOneId);
   expect(user).toBeNull();
 });
